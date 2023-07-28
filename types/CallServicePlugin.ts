@@ -3,13 +3,16 @@ import type {
   OpenTokSessionInfo,
   PublisherState,
   VideoCallClient,
-} from "~/types";
+} from '~/types'
 
 export interface CallServiceBase {
-  initSession(info: AwsChimeSessionInfo | OpenTokSessionInfo): Promise<void>;
-  publisherState: PublisherState | null;
+  initSession(info: AwsChimeSessionInfo | OpenTokSessionInfo): Promise<void>
+  connectSession(token: string): Promise<void>
+  initPublisher(targetElement: HTMLElement): Promise<void>
+  subscribe(stream: any, targetElement: HTMLElement, options: any): Promise<void>
+  publisherState: PublisherState | null
 }
 
 export interface CallServicePlugin extends CallServiceBase {
-  initialize(type: VideoCallClient): void;
+  initialize(type: VideoCallClient): void
 }

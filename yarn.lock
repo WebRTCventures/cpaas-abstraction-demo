@@ -1819,6 +1819,11 @@
     mustache "^2.3.0"
     stack-trace "0.0.10"
 
+"@opentok/client@^2.25.5":
+  version "2.25.5"
+  resolved "https://registry.yarnpkg.com/@opentok/client/-/client-2.25.5.tgz#995642b1354cdea42dc567aaaa061278378a80e6"
+  integrity sha512-DXHjBXqDG2SPR0mjyQJo0CEcQAjn0hzwwPGgG5ZaXpRykPWA3XtrSAiLuIn8/CWQaE+0K3YmDZKYMRa05bJ7Aw==
+
 "@pkgr/utils@^2.3.1":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@pkgr/utils/-/utils-2.4.2.tgz#9e638bbe9a6a6f165580dc943f138fd3309a2cbc"

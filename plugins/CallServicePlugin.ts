@@ -40,6 +40,6 @@ class CallServiceWrapper implements CallServicePlugin {
   }
 }
 
-const plugin: Plugin = (_ctx, inject) => inject('callService', new CallServiceWrapper)
+const plugin: Plugin = (_ctx, inject) => inject('callService', new CallServiceWrapper())
 
 export default plugin
