@@ -38,6 +38,38 @@ class CallServiceWrapper implements CallServicePlugin {
     console.debug('CallServiceWrapper#initSession', { info })
     return this.client?.initSession(info) || Promise.resolve()
   }
+
+  initPublisher(targetElement: HTMLElement): Promise<void> {
+    if (!this.client) {
+      throw new Error('ClientNotInitialized')
+    }
+
+    return this.client.initPublisher(targetElement)
+  }
+
+  connectSession(token: string): Promise<void> {
+    if (!this.client) {
+      throw new Error('ClientNotInitialized')
+    }
+
+    return this.client.connectSession(token)
+  }
+
+  registerStreamCreatedCallback(callback: (stream: any) => void): void {
+    if (!this.client) {
+      throw new Error('ClientNotInitialized')
+    }
+
+    return this.client.registerStreamCreatedCallback(callback)
+  }
+
+  subscribe(stream: any, targetElement: HTMLElement): Promise<void> {
+    if (!this.client) {
+      throw new Error('ClientNotInitialized')
+    }
+
+    return this.client.subscribe(stream, targetElement)
+  }
 }
 
 const plugin: Plugin = (_ctx, inject) => inject('callService', new CallServiceWrapper())

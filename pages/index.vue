@@ -2,21 +2,46 @@
   <div>
     <h1>Hello World</h1>
     <div class="container">
-      <div class="videos">
-        <video id="localVideo" autoplay></video>
+      <div id="videos" class="videos">
+        <div id="publisher" ref="publisher"></div>
+        <div id="subscriber" ref="subscriber"></div>
       </div>
     </div>
+    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import {Component} from 'nuxt-property-decorator'
+import { Component } from 'nuxt-property-decorator'
+import { VideoCallClient } from '~/types';
 
 @Component
 export default class App extends Vue {
-  mounted() {
-    this.$callService.initialize('opentok')
+  async mounted() {
+    const apiKey = this.$config.apiKey
+    const sessionId = this.$config.sessionId
+    const token = this.$config.token
+
+    console.log('DEBUG -- initialize VideoCallClient')
+    this.$callService.initialize(VideoCallClient.OPENTOK)
+
+    console.log('DEBUG -- init session')
+    await this.$callService.initSession({
+      apiKey,
+      sessionId
+    })
+
+    console.log('DEBUG -- register streamcreated event')
+    this.$callService.registerStreamCreatedCallback((stream: any) => {
+      this.$callService.subscribe(stream, this.$refs.subscriber)
+    })
+
+    console.log('DEBUG -- init Publisher')
+    await this.$callService.initPublisher(this.$refs.publisher as HTMLElement)
+
+    console.log('DEBUG -- connect to the session')
+    await this.$callService.connectSession(token)
   }
 }
 </script>

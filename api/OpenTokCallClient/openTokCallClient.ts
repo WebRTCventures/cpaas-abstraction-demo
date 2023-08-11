@@ -53,6 +53,12 @@ export default class OpenTokCallClient implements CallServiceClient {
     })
   }
 
+  registerStreamCreatedCallback(callback: (stream: any) => void): void {
+    this.session?.on('streamCreated', (e) => {
+      callback(e.stream)
+    })
+  }
+
   subscribe(stream: OT.Stream, targetElement: HTMLElement): Promise<void> {
     return new Promise((resolve, reject) => {
       (this.session as OT.Session).subscribe(stream, targetElement, {
