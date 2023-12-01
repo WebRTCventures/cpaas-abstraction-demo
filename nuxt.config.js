@@ -35,7 +35,9 @@ export default {
   modules: [],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['amazon-chime-sdk-js', '@smithy', '@aws-sdk']
+  },
 
   publicRuntimeConfig: {
     apiKey: process.env.API_KEY,
