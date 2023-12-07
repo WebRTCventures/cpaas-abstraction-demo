@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <h1>CPaaS Abstraction Demo</h1>
-      <button id="start" ref="start">Click</button>
+      <button id="start" ref="start">Join</button>
     </div>
     <div class="container">
       <div id="videos" class="videos">
@@ -23,7 +23,7 @@ export default class App extends Vue {
   async mounted() {
     const start = this.$refs.start as HTMLButtonElement
     start.addEventListener('click', async () => {
-      const selected_cpaas = VideoCallClient.AWS_CHIME_SDK
+      const selected_cpaas = VideoCallClient.OPENTOK
 
       const params = new URLSearchParams([
         ['room', 'fancyroom'],
