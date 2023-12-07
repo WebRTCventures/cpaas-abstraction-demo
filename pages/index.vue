@@ -1,14 +1,15 @@
 <template>
   <div>
-    <h1>Hello World</h1>
-    <div class="container">
+    <div class="header">
+      <h1>CPaaS Abstraction Demo</h1>
       <button id="start" ref="start">Click</button>
+    </div>
+    <div class="container">
       <div id="videos" class="videos">
         <div id="publisher" ref="publisher"></div>
         <div id="subscriber" ref="subscriber"></div>
       </div>
     </div>
-    <script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
   </div>
 </template>
 
@@ -56,7 +57,7 @@ export default class App extends Vue {
 </script>
 
 <style>
-h1 {
+.header {
   text-align: center;
 }
 .container {

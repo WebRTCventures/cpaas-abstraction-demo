@@ -1,6 +1,6 @@
 import { Plugin } from '@nuxt/types'
-import AwsChimeSdkCallClient from '~/api/AwsChimeSdkCallClient/awsChimeSdkCallClient'
 import { CallServiceClient } from '~/api/CallServiceClient/callServiceClient'
+import AwsChimeSdkCallClient from '~/api/AwsChimeSdkCallClient/awsChimeSdkCallClient'
 import OpenTokCallClient from '~/api/OpenTokCallClient/openTokCallClient'
 import TwilioCallClient from '~/api/TwilioCallClient/twilioCallClient'
 import {
