@@ -8,9 +8,10 @@ import {
   MeetingSessionStatus
 } from 'amazon-chime-sdk-js'
 import { CallServiceClient } from "~/api/CallServiceClient/callServiceClient";
-import { AwsChimeSessionInfo, PublisherState } from "~/types";
+import { AwsChimeSessionInfo } from "~/types";
 
 export default class AwsChimeSdkCallClient implements CallServiceClient {
+  credentials : AwsChimeSessionInfo
   private session: MeetingSession | undefined
   private logger: ConsoleLogger | undefined
   private subscriber: HTMLDivElement | undefined
@@ -18,7 +19,8 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
   private publisherVideo: HTMLVideoElement | undefined
   private subscribersVideos: Array<HTMLVideoElement>
 
-  constructor() {
+  constructor(credentials : AwsChimeSessionInfo) {
+    this.credentials = credentials
     this.subscribersVideos = []
   }
 
@@ -31,13 +33,13 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
     return vid_node
   }
 
-  initSession({ meeting , attendee } : AwsChimeSessionInfo): Promise<void> {
+  initSession(): Promise<void> {
     this.logger = new ConsoleLogger("MyLogger")
     const deviceController = new DefaultDeviceController(this.logger)
 
     const config = new MeetingSessionConfiguration(
-      meeting,
-      attendee
+      this.credentials.meetingResponse,
+      this.credentials.attendeeResponse
     )
 
     this.session = new DefaultMeetingSession(
@@ -56,7 +58,7 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
     return Promise.resolve();
   }
 
-  async connectSession(token: string): Promise<void> {
+  async connectSession(): Promise<void> {
     const videoInputs = await this.session!.audioVideo.listVideoInputDevices();
     await this.session?.audioVideo.startVideoInput(videoInputs[0].deviceId)
     const observer = {
@@ -115,6 +117,4 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
     this.subscriber = targetElement
     return Promise.resolve();
   }
-
-  publisherState: PublisherState = PublisherState.INITIAL;
 }

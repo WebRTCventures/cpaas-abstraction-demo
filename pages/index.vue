@@ -2,7 +2,7 @@
   <div>
     <h1>Hello World</h1>
     <div class="container">
-      <button ref="start">Click</button>
+      <button id="start" ref="start">Click</button>
       <div id="videos" class="videos">
         <div id="publisher" ref="publisher"></div>
         <div id="subscriber" ref="subscriber"></div>
@@ -17,34 +17,28 @@ import Vue from 'vue'
 import axios from 'axios'
 import { Component } from 'nuxt-property-decorator'
 import { VideoCallClient } from '~/types'
-import { amazonChimeSdk, opentok } from '~/config/cpaas'
 
 @Component
 export default class App extends Vue {
   async mounted() {
-    this.$refs.start.addEventListener('click', async () => {
-      // opentok
-      const apiKey = opentok.apiKey
-      const sessionId = opentok.sessionId
-      const token = opentok.token
+    const start = this.$refs.start as HTMLButtonElement
+    start.addEventListener('click', async () => {
+      const selected_cpaas = VideoCallClient.AWS_CHIME_SDK
 
-      // amazon chime sdk
-      const params = new URLSearchParams([['room', 'fancyroom']])
-      const response = await axios.get('/chime-integration/meeting-session', {
+      const params = new URLSearchParams([
+        ['room', 'fancyroom'],
+        ['cpaas', selected_cpaas],
+      ])
+      const response = await axios.get('/cpaas-integration/meeting-session', {
         params,
       })
-      const meeting = response.data.meetingResponse
-      const attendee = response.data.attendeeResponse
 
       console.log('DEBUG -- initialize VideoCallClient')
       //this.$callService.initialize(VideoCallClient.OPENTOK)
-      this.$callService.initialize(VideoCallClient.AWS_CHIME_SDK)
+      this.$callService.initialize(selected_cpaas, response.data)
 
       console.log('DEBUG -- init session')
-      await this.$callService.initSession({
-        meeting,
-        attendee,
-      })
+      await this.$callService.initSession()
 
       console.log('DEBUG -- register streamcreated event')
       this.$callService.registerStreamCreatedCallback((stream: any) => {
@@ -55,7 +49,7 @@ export default class App extends Vue {
       await this.$callService.initPublisher(this.$refs.publisher as HTMLElement)
 
       console.log('DEBUG -- connect to the session')
-      await this.$callService.connectSession(token)
+      await this.$callService.connectSession()
     })
   }
 }

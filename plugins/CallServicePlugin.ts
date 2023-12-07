@@ -8,7 +8,7 @@ import { CallServicePlugin } from "~/types/CallServicePlugin";
 class CallServiceWrapper implements CallServicePlugin {
   private client: CallServiceClient | null = null
 
-  initialize(clientType: VideoCallClient): void {
+  initialize(clientType: VideoCallClient, credentials : OpenTokSessionInfo | AwsChimeSessionInfo): void {
     if (this.client) {
       return
     }
@@ -17,26 +17,19 @@ class CallServiceWrapper implements CallServicePlugin {
 
     switch (clientType) {
       case VideoCallClient.AWS_CHIME_SDK:
-        this.client = new AwsChimeSdkCallClient()
+        this.client = new AwsChimeSdkCallClient(credentials as AwsChimeSessionInfo)
         break
       case VideoCallClient.OPENTOK:
-        this.client = new OpenTokCallClient()
+        this.client = new OpenTokCallClient(credentials as OpenTokSessionInfo)
         break
       default:
         break
     }
   }
 
-  get publisherState() {
-    if (!this.client) {
-      return null
-    }
-    return this.client.publisherState
-  }
-
-  initSession(info: AwsChimeSessionInfo | OpenTokSessionInfo): Promise<void> {
-    console.debug('CallServiceWrapper#initSession', { info })
-    return this.client?.initSession(info) || Promise.resolve()
+  initSession(): Promise<void> {
+    console.debug('CallServiceWrapper#initSession')
+    return this.client?.initSession() || Promise.resolve()
   }
 
   initPublisher(targetElement: HTMLElement): Promise<void> {
@@ -47,12 +40,12 @@ class CallServiceWrapper implements CallServicePlugin {
     return this.client.initPublisher(targetElement)
   }
 
-  connectSession(token: string): Promise<void> {
+  connectSession(): Promise<void> {
     if (!this.client) {
       throw new Error('ClientNotInitialized')
     }
 
-    return this.client.connectSession(token)
+    return this.client.connectSession()
   }
 
   registerStreamCreatedCallback(callback: (stream: any) => void): void {

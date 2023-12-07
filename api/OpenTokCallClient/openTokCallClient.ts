@@ -1,13 +1,19 @@
 import OT from '@opentok/client'
 import { CallServiceClient } from '~/api/CallServiceClient/callServiceClient'
-import { OpenTokSessionInfo, PublisherState } from '~/types'
+import { AwsChimeSessionInfo, OpenTokSessionInfo } from '~/types'
 
 export default class OpenTokCallClient implements CallServiceClient {
+  credentials: OpenTokSessionInfo
   private session: OT.Session | undefined
   private publisher: OT.Publisher | undefined
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  initSession({ apiKey, sessionId }: OpenTokSessionInfo): Promise<void> {
-    this.session = OT.initSession(apiKey, sessionId)
+ 
+  constructor(credentials : OpenTokSessionInfo) {
+    this.credentials = credentials
+  }
+
+  initSession(): Promise<void> {
+    this.session = OT.initSession(this.credentials.apiKey, this.credentials.sessionId)
 
     return Promise.resolve()
   }
@@ -32,9 +38,9 @@ export default class OpenTokCallClient implements CallServiceClient {
     })
   }
 
-  connectSession(token: string): Promise<void> {
+  connectSession(): Promise<void> {
     return new Promise((resolve, reject) => {
-      ;(this.session as OT.Session).connect(token, (error) => {
+      ;(this.session as OT.Session).connect(this.credentials.token, (error) => {
         if (error) {
           reject(error)
         }
@@ -74,6 +80,4 @@ export default class OpenTokCallClient implements CallServiceClient {
       })
     })
   }
-
-  publisherState: PublisherState = PublisherState.INITIAL
 }

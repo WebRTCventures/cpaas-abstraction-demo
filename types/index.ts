@@ -5,18 +5,13 @@ export enum VideoCallClient {
   AWS_CHIME_SDK = 'chimesdk',
 }
 
-export enum PublisherState {
-  INITIAL = 'initial',
-  CONNECTED = 'connected',
-  DISCONNECTED = 'disconnected',
-}
-
 export interface OpenTokSessionInfo {
   apiKey: string
   sessionId: string
+  token: string
 }
 
 export interface AwsChimeSessionInfo {
-  meeting: MeetingSession
-  attendee: Attendee
+  meetingResponse: MeetingSession
+  attendeeResponse: Attendee
 }

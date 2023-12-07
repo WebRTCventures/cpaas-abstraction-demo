@@ -52,7 +52,7 @@ export default {
     proxy: true
   },
   proxy: {
-    '/chime-integration/meeting-session': { 
+    '/cpaas-integration/meeting-session': { 
       target: 'http://127.0.0.1:3001'  
     }
   },
