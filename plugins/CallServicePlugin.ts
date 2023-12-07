@@ -1,14 +1,23 @@
-import { Plugin } from "@nuxt/types";
-import AwsChimeSdkCallClient from "~/api/AwsChimeSdkCallClient/awsChimeSdkCallClient";
-import { CallServiceClient } from "~/api/CallServiceClient/callServiceClient";
-import OpenTokCallClient from "~/api/OpenTokCallClient/openTokCallClient";
-import { VideoCallClient, AwsChimeSessionInfo, OpenTokSessionInfo } from "~/types";
-import { CallServicePlugin } from "~/types/CallServicePlugin";
+import { Plugin } from '@nuxt/types'
+import AwsChimeSdkCallClient from '~/api/AwsChimeSdkCallClient/awsChimeSdkCallClient'
+import { CallServiceClient } from '~/api/CallServiceClient/callServiceClient'
+import OpenTokCallClient from '~/api/OpenTokCallClient/openTokCallClient'
+import TwilioCallClient from '~/api/TwilioCallClient/twilioCallClient'
+import {
+  VideoCallClient,
+  AwsChimeSessionInfo,
+  OpenTokSessionInfo,
+  TwilioSessionInfo,
+} from '~/types'
+import { CallServicePlugin } from '~/types/CallServicePlugin'
 
 class CallServiceWrapper implements CallServicePlugin {
   private client: CallServiceClient | null = null
 
-  initialize(clientType: VideoCallClient, credentials : OpenTokSessionInfo | AwsChimeSessionInfo): void {
+  initialize(
+    clientType: VideoCallClient,
+    credentials: OpenTokSessionInfo | AwsChimeSessionInfo | TwilioSessionInfo
+  ): void {
     if (this.client) {
       return
     }
@@ -17,11 +26,15 @@ class CallServiceWrapper implements CallServicePlugin {
 
     switch (clientType) {
       case VideoCallClient.AWS_CHIME_SDK:
-        this.client = new AwsChimeSdkCallClient(credentials as AwsChimeSessionInfo)
+        this.client = new AwsChimeSdkCallClient(
+          credentials as AwsChimeSessionInfo
+        )
         break
       case VideoCallClient.OPENTOK:
         this.client = new OpenTokCallClient(credentials as OpenTokSessionInfo)
         break
+      case VideoCallClient.TWILIO:
+        this.client = new TwilioCallClient(credentials as TwilioSessionInfo)
       default:
         break
     }
@@ -65,6 +78,7 @@ class CallServiceWrapper implements CallServicePlugin {
   }
 }
 
-const plugin: Plugin = (_ctx, inject) => inject('callService', new CallServiceWrapper())
+const plugin: Plugin = (_ctx, inject) =>
+  inject('callService', new CallServiceWrapper())
 
 export default plugin

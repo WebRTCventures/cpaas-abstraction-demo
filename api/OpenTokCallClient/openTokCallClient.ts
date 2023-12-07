@@ -1,19 +1,22 @@
 import OT from '@opentok/client'
 import { CallServiceClient } from '~/api/CallServiceClient/callServiceClient'
-import { AwsChimeSessionInfo, OpenTokSessionInfo } from '~/types'
+import { OpenTokSessionInfo } from '~/types'
 
 export default class OpenTokCallClient implements CallServiceClient {
   credentials: OpenTokSessionInfo
   private session: OT.Session | undefined
   private publisher: OT.Publisher | undefined
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
- 
-  constructor(credentials : OpenTokSessionInfo) {
+
+  constructor(credentials: OpenTokSessionInfo) {
     this.credentials = credentials
   }
 
   initSession(): Promise<void> {
-    this.session = OT.initSession(this.credentials.apiKey, this.credentials.sessionId)
+    this.session = OT.initSession(
+      this.credentials.apiKey,
+      this.credentials.sessionId
+    )
 
     return Promise.resolve()
   }
@@ -26,6 +29,8 @@ export default class OpenTokCallClient implements CallServiceClient {
           insertMode: 'replace',
           width: '100%',
           height: '100%',
+          publishAudio: false,
+          publishVideo: true,
         },
         (error) => {
           if (error) {
@@ -67,17 +72,22 @@ export default class OpenTokCallClient implements CallServiceClient {
 
   subscribe(stream: OT.Stream, targetElement: HTMLElement): Promise<void> {
     return new Promise((resolve, reject) => {
-      (this.session as OT.Session).subscribe(stream, targetElement, {
-        insertMode: 'append',
-        width: '100%',
-        height: '100%'
-      }, (error) => {
-        if (error) {
-          reject(error)
-        }
+      ;(this.session as OT.Session).subscribe(
+        stream,
+        targetElement,
+        {
+          insertMode: 'append',
+          width: '100%',
+          height: '100%',
+        },
+        (error) => {
+          if (error) {
+            reject(error)
+          }
 
-        resolve()
-      })
+          resolve()
+        }
+      )
     })
   }
 }

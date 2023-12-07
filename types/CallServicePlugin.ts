@@ -1,6 +1,7 @@
 import type {
   AwsChimeSessionInfo,
   OpenTokSessionInfo,
+  TwilioSessionInfo,
   VideoCallClient,
 } from '~/types'
 
@@ -13,5 +14,8 @@ export interface CallServiceBase {
 }
 
 export interface CallServicePlugin extends CallServiceBase {
-  initialize(type: VideoCallClient, credentials: AwsChimeSessionInfo | OpenTokSessionInfo): void
+  initialize(
+    type: VideoCallClient,
+    credentials: AwsChimeSessionInfo | OpenTokSessionInfo | TwilioSessionInfo
+  ): void
 }
