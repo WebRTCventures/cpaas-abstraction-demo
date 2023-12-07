@@ -32,16 +32,29 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
+  ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['amazon-chime-sdk-js', '@smithy', '@aws-sdk']
+    transpile: ['amazon-chime-sdk-js', '@smithy', '@aws-sdk', 'axios']
   },
 
   publicRuntimeConfig: {
     apiKey: process.env.API_KEY,
     sessionId: process.env.SESSION_ID,
     token: process.env.TOKEN
-  }
+  },
+
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/chime-integration/meeting-session': { 
+      target: 'http://127.0.0.1:3001'  
+    }
+  },
+
 }

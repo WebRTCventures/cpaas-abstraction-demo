@@ -31,15 +31,13 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
     return vid_node
   }
 
-  initSession(_info: AwsChimeSessionInfo): Promise<void> {
-    const { meetingResponse, attendeeResponse } = _info
-
+  initSession({ meeting , attendee } : AwsChimeSessionInfo): Promise<void> {
     this.logger = new ConsoleLogger("MyLogger")
     const deviceController = new DefaultDeviceController(this.logger)
 
     const config = new MeetingSessionConfiguration(
-      meetingResponse,
-      attendeeResponse
+      meeting,
+      attendee
     )
 
     this.session = new DefaultMeetingSession(
@@ -53,10 +51,14 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
 
   initPublisher(targetElement: HTMLDivElement): Promise<void> {
     this.publisher = targetElement
+    this.publisherVideo = this.createVideo('publisher')
+    this.publisher.appendChild(this.publisherVideo)
     return Promise.resolve();
   }
 
-  connectSession(token: string): Promise<void> {
+  async connectSession(token: string): Promise<void> {
+    const videoInputs = await this.session!.audioVideo.listVideoInputDevices();
+    await this.session?.audioVideo.startVideoInput(videoInputs[0].deviceId)
     const observer = {
       audioVideoDidStart: () => {
         this.logger?.debug("Started")
@@ -67,15 +69,10 @@ export default class AwsChimeSdkCallClient implements CallServiceClient {
           return
         }
         if (tileState.localTile) {
-          this.publisherVideo = this.createVideo(
-            tileState.tileId?.toString() || 'publisher'
-          )
           this.session?.audioVideo.bindVideoElement(
             tileState.tileId!,
-            this.publisherVideo
+            this.publisherVideo!
           )
-
-          this.publisher?.appendChild(this.publisherVideo)
         } else {
           let subscriberVideo = this.subscribersVideos.filter(
             sv => sv.id === tileState.tileId!.toString()

@@ -1,3 +1,5 @@
+import { Attendee, MeetingSession } from "amazon-chime-sdk-js"
+
 export enum VideoCallClient {
   OPENTOK = 'opentok',
   AWS_CHIME_SDK = 'chimesdk',
@@ -15,8 +17,6 @@ export interface OpenTokSessionInfo {
 }
 
 export interface AwsChimeSessionInfo {
-  sessionId: string
-  meetingResponse: any
-  attendeeResponse: any
-  localUserId: string
+  meeting: MeetingSession
+  attendee: Attendee
 }

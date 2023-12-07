@@ -13,6 +13,8 @@
     "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/proxy": "^2.1.0",
     "@opentok/client": "^2.25.5",
     "amazon-chime-sdk-js": "^3.18.2",
     "core-js": "^3.25.3",
