@@ -15,7 +15,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import axios from 'axios'
 import { Component } from 'nuxt-property-decorator'
 import { VideoCallClient } from '~/types'
 
@@ -30,7 +29,7 @@ export default class App extends Vue {
         ['room', 'fancyroom'],
         ['cpaas', selected_cpaas],
       ])
-      const response = await axios.get('/cpaas-integration/meeting-session', {
+      const response = await this.$axios.get('/cpaas-integration/meeting-session', {
         params,
       })
 
